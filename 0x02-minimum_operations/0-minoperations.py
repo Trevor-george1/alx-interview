@@ -4,7 +4,7 @@
 
 def minOperations(n):
     """
-    minoperations 
+    minoperations
     gets fewest of operations needed to result in exactly n H characters
     """
     if (n < 2):
