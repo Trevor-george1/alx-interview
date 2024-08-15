@@ -1,43 +1,57 @@
 #!/usr/bin/python3
 """Write a script that reads stdin line by line and computes metrics"""
 
-
+import re
 import sys
 
-status_codes_dict = {'200': 0, '301': 0, '400': 0, '401': 0, '403': 0,
-                     '404': 0, '405': 0, '500': 0}
 
-total_size = 0
+
+
+"""def parse_line(line):
+    match = re.match(r'(\d+\.\d+.\d+) (\S+) \[.*?\] "(GET \/projects\/\d+ HTTPS\/1\.1)" (\d+) (\d+)', line) # Noqa
+    if match:
+        _, _, _, status_code, file_size = match.groups()
+        return int(file_size)
+    return None
+"""
+
+
+def print_stats(file_size, status):
+
+    print(f"File size: {file_size}")
+
+    for key, value in sorted(status.items()):
+        if value != 0:
+            print("{}: {}".format(key, value))
+
+
+possible_status = {'200': 0, '301': 0, '400': 0, '401': 0, '403': 0,
+                   '404': 0, '405': 0, '500': 0}
+
+total_file_size = 0
 count = 0
+
 
 try:
     for line in sys.stdin:
-        line_list = line.split(" ")
+        args = line.split()
 
-        if len(line_list) > 4:
-            status_code = line_list[-2]
-            file_size = line_list[-1]
+        status_code = int(args[-2])
+        file_size = int(args[-1])
 
-            if status_code in status_codes_dict.keys():
-                status_codes_dict[status_code] += 1
+        if status_code in possible_status:
+            possible_status[status_code] += 1
 
-            total_size += file_size
-
-            count += 1
+        total_file_size += file_size
+        count += 1
 
         if count == 10:
+            print_stats(total_file_size, possible_status)
             count = 0
-            print('File size: {}'.format(total_size))
+    print_stats(total_file_size, possible_status)
 
-            for key, value in sorted(status_codes_dict.items()):
-                if value != 0:
-                    print("{}: {}".format(key, value))
-
-except Exception as err:
-    pass
+except KeyboardInterrupt:
+    raise
 
 finally:
-    print("File size: {}".format(total_size))
-    for key, value in sorted(status_codes_dict.items()):
-        if value != 0:
-            print('{}: {}'.format(key, value))
+    print_stats(total_file_size, possible_status)
