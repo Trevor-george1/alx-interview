@@ -1,25 +1,27 @@
 #!/usr/bin/python3
-"""Write a script that reads stdin line by line and computes metrics"""
+"""
+Log parsing
 
-import re
+A script that reads stdin line by line and computes metrics
+"""
+
 import sys
 
 
-def print_stats(file_size, status):
-
-    print(f"File size: {file_size}")
-
-    for key, value in sorted(status.items()):
+def printStats(file_size, status):
+    """function takes the total file size and
+        the status and print them
+    """
+    print("File size: {}".format(file_size))
+    for key, value in status.items():
         if value != 0:
-            print("{}: {}".format(key, value))
+            print("{}: {}". format(key, value))
 
-
-possible_status = {'200': 0, '301': 0, '400': 0, '401': 0, '403': 0,
-                   '404': 0, '405': 0, '500': 0}
 
 total_file_size = 0
 count = 0
-
+possible_status = {200: 0, 301: 0, 400: 0, 401: 0,
+                   403: 0, 404: 0, 405: 0, 500: 0}
 
 try:
     for line in sys.stdin:
@@ -35,12 +37,10 @@ try:
         count += 1
 
         if count == 10:
-            print_stats(total_file_size, possible_status)
+            printStats(total_file_size, possible_status)
             count = 0
-    print_stats(total_file_size, possible_status)
-
+    printStats(total_file_size, possible_status)
 except KeyboardInterrupt:
     raise
-
 finally:
-    print_stats(total_file_size, possible_status)
+    printStats(total_file_size, possible_status)
