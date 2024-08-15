@@ -5,17 +5,6 @@ import re
 import sys
 
 
-
-
-"""def parse_line(line):
-    match = re.match(r'(\d+\.\d+.\d+) (\S+) \[.*?\] "(GET \/projects\/\d+ HTTPS\/1\.1)" (\d+) (\d+)', line) # Noqa
-    if match:
-        _, _, _, status_code, file_size = match.groups()
-        return int(file_size)
-    return None
-"""
-
-
 def print_stats(file_size, status):
 
     print(f"File size: {file_size}")
